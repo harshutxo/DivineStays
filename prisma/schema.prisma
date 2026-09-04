@@ -1,0 +1,169 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum RoomType {
+  SINGLE
+  DOUBLE_SHARING
+  TRIPLE_SHARING
+}
+
+enum BudgetBand {
+  UNDER_7000
+  RANGE_7000_10000
+  ABOVE_10000
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  LOST
+}
+
+enum BookingStatus {
+  REQUESTED
+  CONFIRMED
+  CHECKED_IN
+  CANCELLED
+  COMPLETED
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
+}
+
+model Property {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  name             String
+  address          String
+  area             String
+  near             String
+  tag              String
+  description      String
+  features         String[]
+  priceMin         Int?
+  priceMax         Int?
+  mapQuery         String
+  verified         Boolean  @default(true)
+  yearsActive      Int?
+  responseTimeText String?
+  isPublished      Boolean  @default(true)
+  sortOrder        Int      @default(0)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  photos   Photo[]
+  leads    Lead[]
+  bookings Booking[]
+  reviews  Review[]
+  offers   Offer[]
+  faqs     Faq[]
+}
+
+model Photo {
+  id         String    @id @default(cuid())
+  propertyId String
+  property   Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  url        String
+  type       MediaType @default(IMAGE)
+  alt        String    @default("")
+  sortOrder  Int       @default(0)
+  createdAt  DateTime  @default(now())
+}
+
+model Offer {
+  id           String    @id @default(cuid())
+  propertyId   String
+  property     Property  @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  title        String
+  description  String
+  discountText String
+  isActive     Boolean   @default(true)
+  validUntil   DateTime?
+  createdAt    DateTime  @default(now())
+}
+
+model Faq {
+  id         String   @id @default(cuid())
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  question   String
+  answer     String
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+}
+
+model Lead {
+  id         String      @id @default(cuid())
+  propertyId String?
+  property   Property?   @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  name       String
+  phone      String
+  budgetBand BudgetBand?
+  roomType   RoomType?
+  moveInDate DateTime?
+  institute  String?
+  source     String      @default("unknown")
+  status     LeadStatus  @default(NEW)
+  notes      String?
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  booking Booking?
+}
+
+model Booking {
+  id                 String        @id @default(cuid())
+  propertyId         String
+  property           Property      @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  leadId             String?       @unique
+  lead               Lead?         @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  guestName          String
+  guestPhone         String
+  roomType           RoomType
+  moveInDate         DateTime
+  durationMonths     Int?
+  agreedPriceMonthly Int?
+  status             BookingStatus @default(REQUESTED)
+  notes              String?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+}
+
+model Review {
+  id         String       @id @default(cuid())
+  propertyId String
+  property   Property     @relation(fields: [propertyId], references: [id], onDelete: Restrict)
+  authorName String
+  rating     Int
+  comment    String
+  status     ReviewStatus @default(PENDING)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  photos ReviewPhoto[]
+}
+
+model ReviewPhoto {
+  id        String   @id @default(cuid())
+  reviewId  String
+  review    Review   @relation(fields: [reviewId], references: [id], onDelete: Cascade)
+  url       String
+  createdAt DateTime @default(now())
+}

@@ -7,9 +7,17 @@ Kota-first student accommodation website and lead-generation engine.
 - Divine Home — D-8 Landmark City, Kunadi — near Allen Sangyan
 - Divine Home — G-62 Coral Park — near Allen Supath
 
-## Run
-npm install
-npm run dev
+## Stack
+Next.js (App Router) + Prisma/Postgres (Supabase) + Supabase Storage. Deploys to Vercel — this app uses server-side rendering, API routes and middleware, so it is **not** compatible with static hosting (GitHub Pages).
 
-## Next
-Persist leads in PostgreSQL, add owner dashboard, WhatsApp workflows, SEO landing pages and conversion analytics.
+## Setup
+1. `npm install`
+2. Copy `.env.example` to `.env.local` and fill in a Supabase project's connection strings/keys, an `ADMIN_PASSWORD`, a `SESSION_SECRET`, and your real WhatsApp/call numbers.
+3. `npm run db:migrate` then `npm run db:seed`
+4. `npm run dev`
+
+## Admin
+`/admin` (password-protected via `ADMIN_PASSWORD`) — leads, bookings, review moderation, property management.
+
+## Status
+In progress: lead capture, click-to-call/WhatsApp, booking + admin dashboard, reviews with photos, search/filters/maps, offers, FAQs, property comparison.

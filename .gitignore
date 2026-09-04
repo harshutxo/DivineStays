@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+.env
+.env.local
+.env*.local
+*.tsbuildinfo
+next-env.d.ts
+
+# leftover local downloads/installers, not part of the project
+*.exe
+*.zip
+/DivineStays-v1-scaffold/
+/claude-code-jetbrains-plugin/
