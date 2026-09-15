@@ -17,7 +17,9 @@ Next.js (App Router) + Prisma/Postgres (Supabase) + Supabase Storage. Deploys to
 4. `npm run dev`
 
 ## Admin
-`/admin` (password-protected via `ADMIN_PASSWORD`) — leads, bookings, review moderation, property management.
+`/admin` (password-protected via `ADMIN_PASSWORD`) — leads and review moderation. Property/offer/FAQ content is managed via `npm run db:studio` for now, not a web UI.
 
 ## Status
-In progress: lead capture, click-to-call/WhatsApp, booking + admin dashboard, reviews with photos, search/filters/maps, offers, FAQs, property comparison.
+Live: JustDial-style directory homepage with area filter, per-property detail pages (photos, map, offers, FAQs, reviews), click-to-call/WhatsApp on every listing, lead capture wired to the DB, public review submission with admin moderation.
+
+Not built yet: booking management (schema exists, no UI/API), property/offer/FAQ admin CRUD (use Prisma Studio), property comparison view, real property photos (placeholders in use until supplied).

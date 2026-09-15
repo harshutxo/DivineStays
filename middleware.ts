@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { ADMIN_COOKIE_NAME, verifySessionCookieValue } from "./lib/auth";
 
 const PUBLIC_ADMIN_PATHS = ["/admin/login", "/api/admin/login", "/api/admin/logout"];
+// logout is intentionally public: an expired/invalid session must still be able to clear its cookie.
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
