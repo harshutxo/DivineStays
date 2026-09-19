@@ -9,13 +9,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message ?? "Invalid input" }, { status: 400 });
   }
 
-  const { propertyId, moveInDate, ...rest } = parsed.data;
+  const { propertyId, moveInDate, consentAt, ...rest } = parsed.data;
 
   const lead = await prisma.lead.create({
     data: {
       ...rest,
       propertyId: propertyId || null,
       moveInDate: moveInDate ? new Date(moveInDate) : null,
+      consentAt: new Date(consentAt),
     },
   });
 
