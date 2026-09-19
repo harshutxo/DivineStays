@@ -4,6 +4,37 @@ import { CheckCircle2, ArrowRight } from "lucide-react";
 
 export type LeadFormProperty = { id: string; slug: string; name: string; address: string };
 
+function getAttribution() {
+  if (typeof window === "undefined") return {};
+  const url = new URL(window.location.href);
+  const referrer = document.referrer;
+
+  let referrerDomain: string | undefined;
+  try {
+    referrerDomain = referrer ? new URL(referrer).hostname : undefined;
+  } catch {}
+
+  const utmSource = url.searchParams.get("utm_source") || undefined;
+  const utmMedium = url.searchParams.get("utm_medium") || undefined;
+  const utmCampaign = url.searchParams.get("utm_campaign") || undefined;
+
+  let source = utmSource;
+  if (!source) {
+    if (referrerDomain?.includes("google.")) source = "google_organic";
+    else if (referrerDomain) source = "referral";
+    else source = "direct";
+  }
+
+  return {
+    source,
+    utmSource,
+    utmMedium,
+    utmCampaign,
+    landingPage: (window.location.pathname + window.location.search).slice(0, 500),
+    referrerDomain,
+  };
+}
+
 export default function LeadForm({
   properties = [],
   defaultPropertySlug,
@@ -36,6 +67,8 @@ export default function LeadForm({
         const data = new FormData(form);
         const propertySlug = data.get("propertySlug");
         const propertyId = properties.find((p) => p.slug === propertySlug)?.id;
+        const attribution = getAttribution();
+
         try {
           const res = await fetch("/api/leads", {
             method: "POST",
@@ -48,7 +81,8 @@ export default function LeadForm({
               roomType: data.get("roomType") || undefined,
               moveInDate: data.get("moveInDate") || undefined,
               institute: data.get("institute") || undefined,
-              source: "website",
+              consentAt: new Date().toISOString(),
+              ...attribution,
             }),
           });
           if (!res.ok) {
@@ -66,61 +100,32 @@ export default function LeadForm({
       <p className="gold text-xs font-bold uppercase tracking-[.2em]">Get best deal</p>
       <h3 className="serif mt-2 text-3xl">Find your DivineStays home.</h3>
       <div className="mt-6 grid gap-3">
-        <input
-          name="name"
-          required
-          placeholder="Your name"
-          className="rounded-xl border border-[#e7e0d4] bg-[#faf8f4] px-4 py-3 outline-none focus:border-[#c9953d]"
-        />
-        <input
-          name="phone"
-          required
-          placeholder="WhatsApp / phone number"
-          className="rounded-xl border border-[#e7e0d4] bg-[#faf8f4] px-4 py-3 outline-none focus:border-[#c9953d]"
-        />
-        <select
-          name="propertySlug"
-          defaultValue={defaultPropertySlug ?? ""}
-          className="rounded-xl border border-[#e7e0d4] bg-[#faf8f4] px-4 py-3"
-        >
+        <input name="name" required placeholder="Your name" className="rounded-xl border border-[#e7e0d4] bg-[#faf8f4] px-4 py-3 outline-none focus:border-[#c9953d]" />
+        <input name="phone" required placeholder="WhatsApp / phone number" className="rounded-xl border border-[#e7e0d4] bg-[#faf8f4] px-4 py-3 outline-none focus:border-[#c9953d]" />
+        <select name="propertySlug" defaultValue={defaultPropertySlug ?? ""} className="rounded-xl border border-[#e7e0d4] bg-[#faf8f4] px-4 py-3">
           <option value="">Choose preferred location</option>
-          {properties.map((p) => (
-            <option key={p.slug} value={p.slug}>
-              {p.name} — {p.address}
-            </option>
-          ))}
+          {properties.map((p) => <option key={p.slug} value={p.slug}>{p.name} — {p.address}</option>)}
         </select>
         <div className="grid gap-3 sm:grid-cols-2">
           <select name="budgetBand" defaultValue="" className="rounded-xl border border-[#e7e0d4] bg-[#faf8f4] px-4 py-3">
-            <option value="">Budget</option>
-            <option value="UNDER_7000">Under ₹7,000</option>
-            <option value="RANGE_7000_10000">₹7,000–₹10,000</option>
-            <option value="ABOVE_10000">₹10,000+</option>
+            <option value="">Budget</option><option value="UNDER_7000">Under ₹7,000</option><option value="RANGE_7000_10000">₹7,000–₹10,000</option><option value="ABOVE_10000">₹10,000+</option>
           </select>
           <select name="roomType" defaultValue="" className="rounded-xl border border-[#e7e0d4] bg-[#faf8f4] px-4 py-3">
-            <option value="">Room type</option>
-            <option value="SINGLE">Single</option>
-            <option value="DOUBLE_SHARING">Double sharing</option>
-            <option value="TRIPLE_SHARING">Triple sharing</option>
+            <option value="">Room type</option><option value="SINGLE">Single</option><option value="DOUBLE_SHARING">Double sharing</option><option value="TRIPLE_SHARING">Triple sharing</option>
           </select>
         </div>
         <input name="moveInDate" type="date" className="rounded-xl border border-[#e7e0d4] bg-[#faf8f4] px-4 py-3" />
-        <input
-          name="institute"
-          placeholder="Institute / coaching (optional)"
-          className="rounded-xl border border-[#e7e0d4] bg-[#faf8f4] px-4 py-3"
-        />
+        <input name="institute" placeholder="Institute / coaching (optional)" className="rounded-xl border border-[#e7e0d4] bg-[#faf8f4] px-4 py-3" />
       </div>
+      <label className="mt-4 flex items-start gap-2 text-xs leading-5 text-[#6f6a61]">
+        <input name="consent" type="checkbox" required className="mt-1" />
+        <span>I agree to DivineStays using the information I submit to contact me about accommodation and my enquiry.</span>
+      </label>
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
-      <button
-        disabled={state === "submitting"}
-        className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#1b1a18] px-5 py-3.5 font-semibold text-white disabled:opacity-60"
-      >
+      <button disabled={state === "submitting"} className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-[#1b1a18] px-5 py-3.5 font-semibold text-white disabled:opacity-60">
         {state === "submitting" ? "Sending…" : "Get my options"} <ArrowRight size={17} />
       </button>
-      <p className="mt-3 text-center text-[11px] text-[#8a8378]">
-        We'll use your details only to respond to your accommodation enquiry.
-      </p>
+      <p className="mt-3 text-center text-[11px] text-[#8a8378]">We capture enquiry details when you voluntarily submit this form.</p>
     </form>
   );
 }
