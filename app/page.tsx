@@ -1,5 +1,6 @@
 import { ArrowRight, ShieldCheck, Wifi, Utensils, CheckCircle2 } from "lucide-react";
 import LeadForm from "./components/LeadForm";
+import HostelSearch from "./components/HostelSearch";
 import PropertyDirectory from "./components/PropertyDirectory";
 import { getPublishedProperties } from "@/lib/properties";
 
@@ -36,19 +37,11 @@ export default async function Home() {
                 View locations
               </a>
             </div>
+            <HostelSearch />
             <div className="mt-12 flex flex-wrap gap-7 text-sm text-white/60">
-              <span>
-                <ShieldCheck size={17} className="mr-2 inline" />
-                Security-first
-              </span>
-              <span>
-                <Wifi size={17} className="mr-2 inline" />
-                Wi-Fi ready
-              </span>
-              <span>
-                <Utensils size={17} className="mr-2 inline" />
-                Food options
-              </span>
+              <span><ShieldCheck size={17} className="mr-2 inline" />Security-first</span>
+              <span><Wifi size={17} className="mr-2 inline" />Wi-Fi ready</span>
+              <span><Utensils size={17} className="mr-2 inline" />Food options</span>
             </div>
           </div>
           <LeadForm properties={properties} />
@@ -72,21 +65,9 @@ export default async function Home() {
 
       <section className="bg-[#1b1a18] py-24 text-white">
         <div className="container grid gap-10 md:grid-cols-3">
-          <div>
-            <div className="gold text-4xl font-bold">01</div>
-            <h3 className="mt-4 text-xl font-semibold">Tell us what you need</h3>
-            <p className="mt-2 text-sm leading-6 text-white/55">Location, budget, room preference and move-in date.</p>
-          </div>
-          <div>
-            <div className="gold text-4xl font-bold">02</div>
-            <h3 className="mt-4 text-xl font-semibold">Get matched</h3>
-            <p className="mt-2 text-sm leading-6 text-white/55">We route your enquiry to the right DivineStays property.</p>
-          </div>
-          <div>
-            <div className="gold text-4xl font-bold">03</div>
-            <h3 className="mt-4 text-xl font-semibold">Visit & move in</h3>
-            <p className="mt-2 text-sm leading-6 text-white/55">Connect, compare and choose your room.</p>
-          </div>
+          <div><div className="gold text-4xl font-bold">01</div><h3 className="mt-4 text-xl font-semibold">Tell us what you need</h3><p className="mt-2 text-sm leading-6 text-white/55">Location, budget, room preference and move-in date.</p></div>
+          <div><div className="gold text-4xl font-bold">02</div><h3 className="mt-4 text-xl font-semibold">Get matched</h3><p className="mt-2 text-sm leading-6 text-white/55">We route your enquiry to the right DivineStays property.</p></div>
+          <div><div className="gold text-4xl font-bold">03</div><h3 className="mt-4 text-xl font-semibold">Visit & move in</h3><p className="mt-2 text-sm leading-6 text-white/55">Connect, compare and choose your room.</p></div>
         </div>
       </section>
 
@@ -95,26 +76,12 @@ export default async function Home() {
           <div>
             <p className="gold text-sm font-bold uppercase tracking-[.2em]">Lead generation starts here</p>
             <h2 className="serif mt-3 text-4xl sm:text-5xl">One enquiry. The right stay.</h2>
-            <p className="mt-5 text-sm leading-7 text-[#6f6a61]">
-              This form routes straight into our lead dashboard so the right property team can follow up fast.
-            </p>
+            <p className="mt-5 text-sm leading-7 text-[#6f6a61]">This form routes straight into our lead dashboard so the right property team can follow up fast.</p>
             <div className="mt-7 space-y-3 text-sm">
-              <p>
-                <CheckCircle2 className="gold mr-2 inline" size={18} />
-                Student name + contact
-              </p>
-              <p>
-                <CheckCircle2 className="gold mr-2 inline" size={18} />
-                Location + budget
-              </p>
-              <p>
-                <CheckCircle2 className="gold mr-2 inline" size={18} />
-                Room preference + move-in date
-              </p>
-              <p>
-                <CheckCircle2 className="gold mr-2 inline" size={18} />
-                Institute / coaching intent
-              </p>
+              <p><CheckCircle2 className="gold mr-2 inline" size={18} />Student name + contact</p>
+              <p><CheckCircle2 className="gold mr-2 inline" size={18} />Location + budget</p>
+              <p><CheckCircle2 className="gold mr-2 inline" size={18} />Room preference + move-in date</p>
+              <p><CheckCircle2 className="gold mr-2 inline" size={18} />Institute / coaching intent</p>
             </div>
           </div>
           <LeadForm properties={properties} />
