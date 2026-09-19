@@ -106,6 +106,16 @@ model Lead {
   @@index([createdAt])
 }
 
+model SearchEvent {
+  id String @id @default(cuid())
+  query String
+  source String @default("site_search")
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([query])
+}
+
 model Booking {
   id String @id @default(cuid())
   propertyId String
