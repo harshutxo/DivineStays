@@ -12,6 +12,12 @@ export const leadSchema = z.object({
   moveInDate: z.string().trim().min(1).optional(),
   institute: z.string().trim().max(160).optional(),
   source: z.string().trim().max(60).default("website"),
+  utmSource: z.string().trim().max(120).optional(),
+  utmMedium: z.string().trim().max(120).optional(),
+  utmCampaign: z.string().trim().max(160).optional(),
+  landingPage: z.string().trim().max(500).optional(),
+  referrerDomain: z.string().trim().max(255).optional(),
+  consentAt: z.string().trim().min(1),
 });
 
 export type LeadInput = z.infer<typeof leadSchema>;
